@@ -1,30 +1,74 @@
 {{
     config(
-        materialized='view',
-        alias='dim_order'
+        materialized='table',
+        alias='fact_sales',
+        unique_key='sales_line_id'
     )
 }}
 
+WITH invoice_lines AS (
+    SELECT
+        InvoiceLineID AS sales_line_id,
+        InvoiceID AS document_id,
+        StockItemID,
+        PackageTypeID,
+        [Description],
+        Quantity,
+        UnitPrice,
+        TaxRate,
+        TaxAmount,
+        LineProfit,
+        ExtendedPrice,
+        NULL AS PickedQuantity,
+        NULL AS PickingCompletedWhen,
+        'invoice' AS document_type
+    FROM {{ ref('InvoiceLine') }}
+),
+
+order_lines AS (
+    SELECT
+        OrderLineID AS sales_line_id,
+        OrderID AS document_id,
+        StockItemID,
+        PackageTypeID,
+        [Description],
+        Quantity,
+        UnitPrice,
+        TaxRate,
+        NULL AS TaxAmount,
+        NULL AS LineProfit,
+        NULL AS ExtendedPrice,
+        PickedQuantity,
+        PickingCompletedWhen,
+        'order' AS document_type
+    FROM {{ ref('OrderLine') }}
+)
+
 SELECT
-    {{ dbt_utils.generate_surrogate_key(['i.invoice_id', 'o.order_id', 'il.invoice_line_id', 'ol.order_line_id']) }} AS sales_key, --PK/surrogate key
-    InvoiceLineID AS invoice_line_id, --business key
-    OrderLineID AS order_line_id, --business key
-    i.invoice_key AS invoice_key, --FK
-    o.order_key AS order_key, --FK
-    c.customer_key AS customer_key, --FK
-    d.date_key AS date_key, --FK
-    StockItemID AS stock_item_id,
-    PackageTypeID AS package_type_id,
-    Quantity AS quantity,
-    UnitPrice AS unit_price,
-    TaxRate AS tax_rate,
-    TaxAmount AS tax_amount,
-    LineProfit AS line_profit,
-    ExpectedPrice AS extended_price,
-    PickedQuantity AS picked_quantity,
-    PickingCompletedWhen AS picking_completed_when
-FROM {{ ref('Invoice') }} s
-JOIN {{ ref('dim_invoice') }} i ON i.invoice_key = s.invoice_key
-JOIN {{ ref('dim_order') }} o ON o.order_key = s.order_key
-JOIN {{ ref('dim_customer') }} c ON c.customer_key = s.customer_key
-JOIN {{ ref('dim_date') }} d ON d.date_key = s.date_key
+    sales_line_id,
+    document_id,
+    document_type,
+    StockItemID,
+    PackageTypeID,
+    [Description],
+    Quantity,
+    UnitPrice,
+    TaxRate,
+    TaxAmount,
+    LineProfit,
+    ExtendedPrice,
+    PickedQuantity,
+    PickingCompletedWhen,
+    CASE 
+        WHEN document_type = 'invoice' THEN ExtendedPrice
+        WHEN document_type = 'order' THEN Quantity * UnitPrice
+    END AS calculated_amount,
+    CASE 
+        WHEN document_type = 'invoice' THEN TaxAmount
+        WHEN document_type = 'order' THEN Quantity * UnitPrice * (TaxRate / 100)
+    END AS calculated_tax_amount
+FROM (
+    SELECT * FROM invoice_lines
+    UNION ALL
+    SELECT * FROM order_lines
+) AS combined

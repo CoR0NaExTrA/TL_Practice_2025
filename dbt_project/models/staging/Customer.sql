@@ -51,7 +51,7 @@ WITH cleaned AS (
         END AS DeliveryLatitude,
 
         CURRENT_TIMESTAMP AS dbt_loaded_at
-    FROM {{ source('landing', 'Customer') }}
+    FROM {{ source('staging', 'Customer') }}
 )
 SELECT * FROM cleaned
 WHERE CustomerID IS NOT NULL

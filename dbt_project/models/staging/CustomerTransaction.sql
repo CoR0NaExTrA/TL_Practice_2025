@@ -29,7 +29,7 @@ WITH cleaned AS (
             ELSE 0 
         END AS IsFinalized
 
-    FROM {{ source('landing', 'CustomerTransaction') }}
+    FROM {{ source('staging', 'CustomerTransaction') }}
 )
 
 SELECT * FROM cleaned

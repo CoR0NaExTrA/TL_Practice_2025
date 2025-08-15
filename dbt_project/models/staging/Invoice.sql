@@ -29,7 +29,7 @@ WITH cleaned AS(
 
         TRY_CONVERT(DATETIME2, ConfirmedDeliveryTime, 121) AS ConfirmedDeliveryTime,
         TRIM(ConfirmedReceivedBy) AS ConfirmedReceivedBy
-    FROM {{ source('landing', 'Invoice') }}
+    FROM {{ source('staging', 'Invoice') }}
 )
 SELECT * FROM cleaned
 WHERE InvoiceID IS NOT NULL

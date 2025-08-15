@@ -1,12 +1,12 @@
 {{
     config(
-        materialized='view',
-        alias='dim_customer_category'
+        materialized='table',
+        alias='dim_customer_category',
+        unique_key='customer_category_id'
     )
 }}
 
-SELECT 
-    {{dbt_utils.generate_surrogate_key(['CustomerCategoryID'])}} AS customer_category_key, --PK/surrogate key
-    CustomerCategoryID AS customer_category_id, --business key
+SELECT
+    CustomerCategoryID AS customer_category_id, --business key/PK
     CustomerCategoryName AS customer_category_name
-FROM 
+FROM {{ ref('CustomerCategory') }}

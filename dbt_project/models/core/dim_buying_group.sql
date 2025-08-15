@@ -1,12 +1,12 @@
 {{
     config(
-        materialized='view',
-        alias='dim_buying_group'
+        materialized='table',
+        alias='dim_buying_group',
+        unique_key='buying_group_id'
     )
 }}
 
 SELECT 
-    {{dbt_utils.generate_surrogate_key(['BuyingGroupID'])}} AS buying_group_key, --PK/surrogate key
-    BuyingGroupID AS buying_group_id, --business key
+    BuyingGroupID AS buying_group_id, --business key/PK
     BuyingGroupName AS buying_group_name
-FROM {{ source('landing', 'CustomerCategory') }}
+FROM {{ ref('BuyingGroup') }}

@@ -21,7 +21,7 @@ WITH cleaned AS (
         TRY_CAST(PickedQuantity AS INT) AS PickedQuantity,
 
         TRY_CONVERT(DATE, PickingCompletedWhen, 121) AS PickingCompletedWhen
-    FROM {{ source('landing', 'OrderLine') }}
+    FROM {{ source('staging', 'OrderLine') }}
 )
 SELECT * FROM cleaned
 WHERE OrderLineID IS NOT NULL

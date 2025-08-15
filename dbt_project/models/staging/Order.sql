@@ -28,7 +28,7 @@ WITH cleaned AS (
 
         TRY_CONVERT(DATETIME2, PickingCompletedWhen, 121) AS PickingCompletedWhen
 
-    FROM {{ source('landing', 'Order') }}
+    FROM {{ source('staging', 'Order') }}
 )
 
 SELECT * FROM cleaned

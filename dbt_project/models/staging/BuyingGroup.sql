@@ -6,4 +6,4 @@
 }}
 
 SELECT *
-FROM {{ source('landing', 'BuyingGroup') }}
+FROM {{ source('staging', 'BuyingGroup') }}

@@ -1,14 +1,14 @@
 {{
     config(
-        materialized='view',
-        alias='dim_order'
+        materialized='table',
+        alias='dim_order',
+        unique_key='order_id'
     )
 }}
 
 SELECT
-    {{ dbt_utils.generate_surrogate_key(['InvoiceID']) }} AS order_key, --PK/surrogate key
-    InvoiceID AS order_id, --business key
-    c.customer_key AS customer_key, --FK
+    OrderID AS order_id, --business key/PK
+    c.CustomerID AS customer_id, --FK
     SalespersonPersonID AS salesperson_person_id,
     PickedByPersonID AS picked_by_person_id,
     ContactPersonID AS contact_person_id,
@@ -19,4 +19,4 @@ SELECT
     IsUndersupplyBackordered AS is_undersupply_backordered,
     PickingCompletedWhen AS picking_completed_when
 FROM {{ ref('Order') }} i
-JOIN {{ ref('dim_customer') }} c ON c.customer_key = i.customer_key
+JOIN {{ ref('Customer') }} c ON c.CustomerID = i.CustomerID

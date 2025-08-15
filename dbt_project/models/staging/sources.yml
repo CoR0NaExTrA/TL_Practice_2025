@@ -1,7 +1,7 @@
 version: 2
 
 sources:
-  - name: landing
+  - name: staging
     schema: dbo # Схема, где находятся исходные таблицы
     tables:
       - name: BuyingGroup

@@ -1,17 +1,17 @@
 {{
     config(
-        materialized='view',
-        alias='dim_customer'
+        materialized='table',
+        alias='dim_customer',
+        unique_key='customer_id'
     )
 }}
 
 SELECT
-    {{ dbt_utils.generate_surrogate_key(['CustomerID']) }} AS customer_key, --PK/surrogate key
-    CustomerID AS customer_id, --business key
+    CustomerID AS customer_id, --business key/PK
     CustomerName AS customer_name,
     BillToCustomerID AS bill_to_customer_id,
-    cc.customer_category_key AS customer_category_key, --FK
-    b.buying_group_key AS buying_group_key, --FK
+    cc.CustomerCategoryID AS customer_category_id, --FK
+    b.BuyingGroupID AS buying_group_id, --FK
     PrimaryContactPersonID AS primary_contact_person_id,
     AlternateContactPersonID AS alternate_contact_person_id,
     DeliveryMethodID AS delivery_method_id,
@@ -25,7 +25,8 @@ SELECT
     PhoneNumber AS phone_number,
     WebsiteURL AS website_url,
     DeliveryAddressLine AS delivery_address_line,
-    DeliveryLocationLat AS delivery_location_lat,
+    DeliveryLatitude AS delivery_latitude,
+    dbt_loaded_at
 FROM {{ ref('Customer') }} c
-JOIN {{ ref('dim_buying_group') }} b ON b.buying_group_key = c.buying_group_key
-JOIN {{ ref('dim_customer_category') }} cc ON cc.customer_category_key = c.customer_category_key
+JOIN {{ ref('BuyingGroup') }} b ON b.BuyingGroupID = c.BuyingGroupID
+JOIN {{ ref('CustomerCategory') }} cc ON cc.CustomerCategoryID = c.CustomerCategoryID

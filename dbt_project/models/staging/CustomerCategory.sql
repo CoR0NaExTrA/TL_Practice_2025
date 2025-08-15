@@ -6,4 +6,4 @@
 }}
 
 SELECT *
-FROM {{ source('landing', 'CustomerCategory') }}
+FROM {{ source('staging', 'CustomerCategory') }}

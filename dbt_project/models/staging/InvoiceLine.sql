@@ -20,7 +20,7 @@ WITH cleaned AS (
         TRY_CAST(TaxAmount AS MONEY) AS TaxAmount,
         TRY_CAST(LineProfit AS MONEY) AS LineProfit,
         TRY_CAST(ExtendedPrice AS MONEY) AS ExtendedPrice
-    FROM {{ source('landing', 'InvoiceLine') }}
+    FROM {{ source('staging', 'InvoiceLine') }}
 )
 SELECT * FROM cleaned
 WHERE InvoiceLineID IS NOT NULL
