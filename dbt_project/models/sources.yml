@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: landing
+    schema: dbo # Схема, где находятся исходные таблицы
+    tables:
+      - name: BuyingGroup
+      - name: Customer
+      - name: CustomerCategory
+      - name: CustomerTransaction
+      - name: InvoiceLine
+      - name: Invoice
+      - name: OrderLine
+      - name: Order
