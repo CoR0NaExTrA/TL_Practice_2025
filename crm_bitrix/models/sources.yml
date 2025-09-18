@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: landing
+    database: tedt_db
+    schema: public
+    tables:
+      - name: test_db.crm_process_category_list
+      - name: test_db.crm_process_company
+      - name: test_db.crm_process_contact
+      - name: test_db.crm_process_deal
+      - name: test_db.crm_process_enum_field
+      - name: test_db.crm_process_field
+      - name: test_db.crm_process_lead
+      - name: test_db.crm_process_lead_product_map
+      - name: test_db.crm_process_product
+      - name: test_db.crm_process_product_section
+      - name: test_db.crm_process_smart_category
+      - name: test_db.crm_process_smart_element_142
+      - name: test_db.crm_process_smart_field
+      - name: test_db.crm_process_stagehistory_deal
+      - name: test_db.crm_process_stagehistory_lead
+      - name: test_db.crm_process_status_list
+      - name: test_db.crm_process_task
+      - name: test_db.crm_process_task_stages
+      - name: test_db.crm_process_user
