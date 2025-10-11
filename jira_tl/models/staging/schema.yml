@@ -1,0 +1,25 @@
+version: 2
+
+sources:
+  - name: jira_tl
+    database: landing
+    schema: jira_tl
+    tables:
+      - name: issue_event_test
+        freshness:
+          warn_after: {count: 1, period: day}
+          error_after: {count: 2, period: day}
+        loaded_at_field: created_at
+
+models:
+  - name: stg_jira_issue_event
+    description: "Сырые события Jira, приведённые к staging-формату"
+    columns:
+      - name: event_row_id
+        description: "Уникальный идентификатор строки события"
+        tests:
+          - not_null
+          - unique
+      - name: issue_id
+        tests:
+          - not_null

@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: fact_incident
+    description: "Факт-таблица инцидентов Jira (core layer)"
+    columns:
+      - name: incident_id
+        description: "Уникальный идентификатор события (из staging.event_row_id)"
+        tests:
+          - not_null
+          - unique
+
+      - name: issue_id
+        description: "ID задачи в Jira"
+        tests:
+          - not_null
+
+      - name: priority_name
+        description: "Приоритет инцидента (например, High, Medium, Low)"
+
+      - name: region
+        description: "Регион возникновения инцидента"
+
+      - name: service_name
+        description: "Имя сервиса, затронутого инцидентом"
+
+      - name: unavailability_min
+        description: "Длительность недоступности сервиса в минутах"
+
+      - name: downtime_minutes
+        description: "Вычисляемое поле — длительность простоя на основе дат начала/конца"
+
+      - name: date_begin
+        description: "Дата и время начала инцидента"
+        tests:
+          - not_null
+
+      - name: date_end
+        description: "Дата и время окончания инцидента"
+
+      - name: updated_at
+        description: "Время последнего обновления события"
+        tests:
+          - not_null
