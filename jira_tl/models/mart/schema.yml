@@ -4,7 +4,7 @@ models:
   - name: mean_time_to_recovery
     description: "Агрегированная модель для дашборда MTTR по инцидентам Jira"
     columns:
-      - name: service_group
+      - name: product
         description: "Группа сервиса после перекодировки"
         tests:
           - not_null
@@ -16,23 +16,26 @@ models:
           - accepted_values:
               values: ['RU','Asia']
 
-      - name: priority_name
-        description: "Приоритет инцидента"
-        tests:
-          - not_null
-          - accepted_values:
-              values: ['Critical','Normal','Критический','Minor','Blocker']
-
       - name: incident_date
         description: "Дата начала инцидента в MSK"
         tests:
           - not_null
 
-      - name: incident_count
-        description: "Количество инцидентов за день"
+      - name: total_incidents_count
+        description: "Общее кол-во инцидентов"
+        tests:
+          - not_null
+
+      - name: significant_incidents_count
+        description: "Кол-во значимых инцидентов"
+        tests:
+          - not_null
+
+      - name: nonsignificant_incidents_count
+        description: "Кол-во незначимых инцидентов"
+
+      - name: significant_downtime_min
+        description: "Продолжительность значимых инцидентов в минутах"
 
       - name: mean_time_to_recovery_min
         description: "Среднее время восстановления в минутах"
-
-      - name: total_downtime_min
-        description: "Суммарное время простоя в минутах"
